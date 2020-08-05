@@ -3,6 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class DatabaseMethods{
+  getEvents(){
+    return Firestore.instance.collection("Events")
+        .getDocuments();
+  }
   getUserByUsername(String name) async {
     return await Firestore.instance.collection("users")
       .where("name",isEqualTo:name)
@@ -16,6 +20,9 @@ class DatabaseMethods{
         .catchError((e) {
       print(e.toString());
     });
+  }
+  getProfile(String userID){
+    return Firestore.instance.collection('users').document(userID).get();
   }
 
   uploadUserInfo(userMap) async {
@@ -52,6 +59,15 @@ class DatabaseMethods{
     return await Firestore.instance.collection("ChatRoom")
             .where("users",arrayContains:userID)
             .snapshots();
+  }
+
+  Future<DocumentReference> addFeedback(feedbackMap) {
+    return Firestore.instance
+        .collection("feedback")
+        .add(feedbackMap)
+        .catchError((e) {
+      print(e);
+    });
   }
 
   Future<dynamic> getUserFromID(String userID) async{

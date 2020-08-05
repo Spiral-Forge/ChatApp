@@ -1,11 +1,15 @@
 import 'package:chatApp/common/widgets.dart';
 import 'package:chatApp/config/constants.dart';
 import 'package:chatApp/helper/authenticate.dart';
-import 'package:chatApp/helper/helperFunctions.dart';
+// import 'package:chatApp/helper/Storage.dart';
 import 'package:chatApp/services/auth.dart';
 import 'package:chatApp/services/database.dart';
 import 'package:chatApp/views/conversation.dart';
 import 'package:chatApp/views/searchScreen.dart';
+import 'package:chatApp/views/sidebarScreens/about.dart';
+import 'package:chatApp/views/sidebarScreens/faqs.dart';
+import 'package:chatApp/views/sidebarScreens/feedback.dart';
+import 'package:chatApp/views/sidebarScreens/guidelines.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoom extends StatefulWidget {
@@ -14,6 +18,7 @@ class ChatRoom extends StatefulWidget {
 }
 
 class _ChatRoomState extends State<ChatRoom> {
+  var _darkTheme = true;
   AuthMethods authMethods=new AuthMethods();
   DatabaseMethods databaseMethods=new DatabaseMethods();
   Stream chatRoomsStream;
@@ -44,8 +49,8 @@ class _ChatRoomState extends State<ChatRoom> {
 
   }
   void saveUserInfo() async {
-    Constants.myID = await HelperFunctions.getUserID();
-    print("coming here and id is "+ Constants.myID);
+    //Constants.myID = await StorageHelperFunctions.getUserID();
+    //print("coming here and id is "+ Constants.myID);
     databaseMethods.getChatRooms(Constants.myID).then((chatRooms){
       setState(() {
         chatRoomsStream=chatRooms;
@@ -56,21 +61,99 @@ class _ChatRoomState extends State<ChatRoom> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("home"),
-        actions: <Widget>[
-          GestureDetector(
-            onTap: (){
-              authMethods.signOut();
-              Navigator.pushReplacement(context, MaterialPageRoute(
-              builder: (context)=>Authenticate()
-            ));
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal:16),
-              child: Icon(Icons.exit_to_app)
+        title: Text("Chat Room"),
+        // actions: <Widget>[
+        //   GestureDetector(
+        //     onTap: (){
+        //       authMethods.signOut();
+        //       Navigator.pushReplacement(context, MaterialPageRoute(
+        //       builder: (context)=>Authenticate()
+        //     ));
+        //     },
+        //     child: Container(
+        //       padding: EdgeInsets.symmetric(horizontal:16),
+        //       child: Icon(Icons.exit_to_app)
+        //     ),
+        //   )
+        // ],
+      ),
+      drawer: new Drawer(
+        child: new ListView(
+          children: <Widget>[
+            new ListTile(
+              title: new Text("Code of Conduct"),
+              trailing: new Icon(Icons.arrow_right),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new Guidelines()));
+              }
             ),
-          )
-        ],
+            new ListTile(
+              title: new Text("About"),
+              trailing: new Icon(Icons.arrow_right),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new About()));
+              }
+            ),
+            new ListTile(
+              title: new Text("FAQs"),
+              trailing: new Icon(Icons.arrow_right),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new FAQS()));
+              }
+            ),
+            
+            new ListTile(
+              title: new Text("Contact us and feedback"),
+              trailing: new Icon(Icons.arrow_right),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MyFeedback()));
+              }
+            ),
+             
+            new Divider(),
+            new ListTile(
+              trailing: Transform.scale(
+                scale: 1.4,
+                child: Switch(
+                  value: _darkTheme,
+                  // onChanged: (val) {
+                  //   setState(() {
+                  //     _darkTheme = val;
+                  //   });
+                  //   //onThemeChanged(val, _themeChanger);
+                  // },
+                ),
+              ),
+              // leading: new IconButton(
+              //             onPressed: () => _themeChanger.setTheme(Theme.dark()),
+              //             icon: Icon(
+              //               Icons.brightness_3
+              //             ),
+              //             color: Hexcolor('#565656'),
+              //           ),
+              // title: new Text("Change Theme"),
+              // onTap: () {
+              //   Navigator.of(context).pop();
+              //   Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new ThemeChanger(ThemeData.dark())));
+              // }
+            ),           
+            new Divider(),
+            new ListTile(
+              title: new Text("Logout"),
+              trailing: new Icon(Icons.people),
+              onTap: () async{
+                await authMethods.signOut();
+                Navigator.pushReplacement(context, MaterialPageRoute(
+                  builder: (context)=>Authenticate()
+                ));
+              }
+            ),
+          ],
+        ),
       ),
       body:chatRoomList(),
       floatingActionButton: FloatingActionButton(

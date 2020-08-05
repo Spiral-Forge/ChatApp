@@ -1,6 +1,6 @@
 import 'package:chatApp/common/widgets.dart';
 import 'package:chatApp/config/constants.dart';
-import 'package:chatApp/helper/helperFunctions.dart';
+import 'package:chatApp/helper/Storage.dart';
 import 'package:chatApp/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

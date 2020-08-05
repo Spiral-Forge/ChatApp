@@ -1,7 +1,8 @@
 import 'package:chatApp/common/widgets.dart';
-import 'package:chatApp/helper/helperFunctions.dart';
+import 'package:chatApp/helper/Storage.dart';
 import 'package:chatApp/services/auth.dart';
 import 'package:chatApp/services/database.dart';
+import 'package:chatApp/views/bottomNavigationScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -30,13 +31,13 @@ class _SignInState extends State<SignIn> {
         print(val);
         if(val!=null){
           QuerySnapshot userInfoSnapshot =await DatabaseMethods().getUserInfo(emailController.text);
-            await HelperFunctions.saveUserLoggedIn(true);
-            await HelperFunctions.saveUserName(userInfoSnapshot.documents[0].data["name"]);
-            await HelperFunctions.saveUserEmail(userInfoSnapshot.documents[0].data["email"]);
+            await StorageHelperFunctions.saveUserLoggedIn(true);
+            await StorageHelperFunctions.saveUserName(userInfoSnapshot.documents[0].data["name"]);
+            await StorageHelperFunctions.saveUserEmail(userInfoSnapshot.documents[0].data["email"]);
             //print("id recieved is "+userInfoSnapshot.documents[0].documentID);
-            await HelperFunctions.saveUserID(userInfoSnapshot.documents[0].documentID);
+            await StorageHelperFunctions.saveUserID(userInfoSnapshot.documents[0].documentID);
           Navigator.pushReplacement(context, MaterialPageRoute(
-            builder: (context)=>ChatRoom()
+            builder: (context)=>BottomNavigationScreen()
           ));
         }else{
           print("cant sign u in");

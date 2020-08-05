@@ -1,8 +1,9 @@
 
 import 'package:chatApp/common/widgets.dart';
-import 'package:chatApp/helper/helperFunctions.dart';
+import 'package:chatApp/helper/Storage.dart';
 import 'package:chatApp/services/auth.dart';
 import 'package:chatApp/services/database.dart';
+import 'package:chatApp/views/bottomNavigationScreen.dart';
 import 'package:flutter/material.dart';
 
 import 'chatRoomScreen.dart';
@@ -35,15 +36,15 @@ class _SignUpState extends State<SignUp> {
             "name":nameController.text,
             "email":emailController.text
           };
-          HelperFunctions.saveUserLoggedIn(true);
-          HelperFunctions.saveUserEmail(emailController.text);
-          HelperFunctions.saveUserName(nameController.text);
+          StorageHelperFunctions.saveUserLoggedIn(true);
+          StorageHelperFunctions.saveUserEmail(emailController.text);
+          StorageHelperFunctions.saveUserName(nameController.text);
 
           databaseMethods.uploadUserInfo(userMap).then((userData) async {
             print("printing user id "+userData.documentID);
-            await HelperFunctions.saveUserID(userData.documentID);
+            await StorageHelperFunctions.saveUserID(userData.documentID);
             Navigator.pushReplacement(context, MaterialPageRoute(
-            builder: (context)=>ChatRoom()
+            builder: (context)=>BottomNavigationScreen()
           ));
           });
           

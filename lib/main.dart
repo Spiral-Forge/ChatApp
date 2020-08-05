@@ -1,6 +1,7 @@
 import 'package:chatApp/helper/authenticate.dart';
-import 'package:chatApp/helper/helperFunctions.dart';
-import 'package:chatApp/views/chatRoomScreen.dart';
+import 'package:chatApp/helper/Storage.dart';
+//import 'package:chatApp/views/chatRoomScreen.dart';
+import 'package:chatApp/views/bottomNavigationScreen.dart';
 import 'package:flutter/material.dart';
 void main() {
   runApp(MyApp());
@@ -17,13 +18,13 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState(){
     super.initState();
-    //HelperFunctions.clearData();
-    //print("cleared everything");
+    StorageHelperFunctions.clearData();
+    print("cleared everything");
     getLoggedInState();
   }
 
   getLoggedInState() async{
-    await HelperFunctions.getUserLoggedIn().then((val){
+    await StorageHelperFunctions.getUserLoggedIn().then((val){
         setState(() {
           isLoggedIn=val;
         });
@@ -39,7 +40,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch:Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity 
       ),
-      home:isLoggedIn==null||false ? Authenticate() : ChatRoom()
+      home:isLoggedIn==null||false ? Authenticate() : BottomNavigationScreen()
     );
   }
 }
